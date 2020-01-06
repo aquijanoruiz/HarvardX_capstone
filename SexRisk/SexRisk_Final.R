@@ -37,7 +37,7 @@ if(!require(caret)) install.packages("caret", repos = "http://cran.us.r-project.
 # the assessment of this project. We wil use the Github url.
 org.url <- "https://www.ecuadorencifras.gob.ec/documentos/web-inec/Estadisticas_Sociales/ENSANUT/ENSANUT_2018/BDD_ENSANUT_2018_STATA_.zip"
 # We give the url a name
-url <- "https://github.com/aquijanoruiz/HarvardX_capstone/raw/master/SexRisk/BDD_ENSANUT_2018_STATA_.zip"
+url <- "https://github.com/aquijanoruiz/HarvardX_capstone/raw/master/SexRisk/BDD_ENSANUT_2018_STATA.zip"
 # We create a temporary directory
 td <- tempdir()
 # We create the placeholder file
@@ -244,15 +244,9 @@ daughters$area <- factor(revalue(daughters$area, c("urbano" = "urban")),
 summary(daughters$area)
 
 # ethnicity ------------------------------
-daughters$ethnicity <- revalue(daughters$f1_s2_9, c("ind??gena?" = "indigenous",
-                                                    "afroecuatoriano/a         afrodescendiente?" = 
-                                                      "african ecuadorian",
-                                                    "negro/a?" = "black",
-                                                    "mulato/a?" = "mulatto",
-                                                    "montuvio/a?" = "montuvio",
-                                                    "mestizo/a?" = "mestizo",
-                                                    "blanco/a?" = "white",
-                                                    "otra, cu??l? (especifique)" = "other"))
+daughters$ethnicity <- daughters$f1_s2_9
+levels(daughters$ethnicity) <- c("indigenous","african ecuadorian", "black", "mulatto", 
+                                 "montuvio", "mestizo", "white", "other")
 
 summary(daughters$ethnicity)
 
@@ -318,9 +312,8 @@ summary(daughters$transfer)
 
 # m.job ------------------------------
 # Whether the mother has a job or no
-mothers$m.job <- factor(revalue(mothers$f1_s3_1, c("trabaj?? al menos una hora?" = "yes",
-                                                   "no trabaj???" = "no")),
-                        levels = c("yes", "no"))
+mothers$m.job <- mothers$f1_s3_1
+levels(mothers$m.job) <- c("yes", "no")
 summary(mothers$m.job)
 
 # m.live.house ------------------------------
@@ -347,17 +340,9 @@ table(daughters$attend.school, daughters$age) # a huge portion of people at age 
 
 # m.education ------------------------------
 # Mother's education attainment (none, primary school, secondary school, university)
-mothers$m.education <- factor(revalue(mothers$f1_s2_19_1, c("ninguno" = "none", 
-                                                            "centro de alfabetizaci??n" = "none",
-                                                            "jard??n de infantes" = "none",
-                                                            "primaria" = "primary school",
-                                                            "educaci??n b??sica" = "primary school",
-                                                            "secundaria" = "secondary school",
-                                                            "educaci??n media /bachillerato" = "secondary school",
-                                                            "superior no universitario" = "university",
-                                                            "superior universitario" = "university",
-                                                            "post-grado, doctorado, phd" = "university")),
-                              levels = c("none", "primary school", "secondary school", "university"))
+mothers$m.education <- mothers$f1_s2_19_1
+levels(mothers$m.education) <- c("none", "none", "none", "primary school", "primary school", "secondary school", 
+                                 "secondary school", "university", "university", "university")
 summary(mothers$m.education)
 
 # contraception.info ------------------------------
@@ -452,11 +437,8 @@ hist(mothers$m.age.first.intercourse)
 
 # m.contraception ------------------------------
 # Mother's use of contraception (is using, has ever used, has never used)
-mothers$m.contraception <- factor(revalue(mothers$f2_s6_604, 
-                                          c("la entrevistada est?? usando alg??n m??todo actualmente" = "is using",
-                                            "la entrevistada ha usado m??todos pero no usa actualmente" = "has ever used",
-                                            "la entrevistada nunca ha usado m??todos" = "has never used")),
-                                  levels = c("is using", "has ever used", "has never used"))
+mothers$m.contraception <- mothers$f2_s6_604
+levels(mothers$m.contraception) <- c("is using", "has ever used", "has never used")
 summary(mothers$m.contraception)
 
 #####################################################################
@@ -475,10 +457,9 @@ summary(daughters$intercourse)
 
 # contraception ------------------------------
 # Daughter's use of contraception (is using, has ever used, has never used)
-daughters$contraception <- as.character(revalue(daughters$f2_s6_604, 
-                                                c("la entrevistada est?? usando alg??n m??todo actualmente" = "is using",
-                                                  "la entrevistada ha usado m??todos pero no usa actualmente" = "has ever used",
-                                                  "la entrevistada nunca ha usado m??todos" = "has never used")))
+daughters$contraception <- daughters$f2_s6_604
+levels(daughters$contraception) <- c("is using", "has ever used", "has never used")
+summary(daughters$contraception)
 
 # Many women who have never used contraception have never had done so because they have never had 
 # intercourse. However, some of them have never used contraception despite having had intercourse.
@@ -497,22 +478,14 @@ table(daughters$intercourse,daughters$contraception,
 # Reason why the daughter does not use contraception (wants to get pregnant, postnatal, no sex life,
 # doesn't like it, afraid of side effects, had side effects, partner doesn't like it, feels embarrassed,
 # because of economic reasons, no knowledge about contraception, religious reasons, others, doesn't know )
-daughters$contraception.no.use.reason <- revalue(daughters$f2_s6_613, 
-                                                 c("desea embarazo?" = "wants to get pregnant",
-                                                   "postparto o amamantamiento?" = "postnatal",
-                                                   "sin vida sexual?" = "no sex life",
-                                                   "por la edad?" = "because of age",
-                                                   "no le gusta?" = "doesn't like it",
-                                                   "miedo a efectos colaterales?" = "afraid of side effects",
-                                                   "tuvo efectos colaterales?" = "had side effects",
-                                                   "la pareja se opone?" = "partner doesn't like it",
-                                                   "por pena o verg??enza" = "feels embarrassed",
-                                                   "por motivos econ??micos" = "because of economic reasons",
-                                                   "no conoce/no tiene informaci??n sobre m??todos anticonceptivos?" = "no knowledge about contraception",
-                                                   "razones religiosas?" = "religious reasons",
-                                                   "otro, cu??l?" = "others",
-                                                   "no sabe/no responde" = "doesn't know"))
+daughters$contraception.no.use.reason <- daughters$f2_s6_613
+levels(daughters$contraception.no.use.reason) <- 
+  c("wants to get pregnant","postnatal","no sex life", "because of age", "doesn't like it", 
+    "afraid of side effects", "had side effects", "partner doesn't like it", "feels embarrassed", 
+    "feels embarrassed", "because of economic reasons", "no knowledge about contraception", 
+    "religious reasons", "others" , "doesn't know")
 summary(daughters$contraception.no.use.reason)
+
 # contraception.first ------------------------------
 # Whether the daughter used contraception at first intercourse
 daughters$contraception.first <- as.character(revalue(as.factor(daughters$f2_s8_808),
