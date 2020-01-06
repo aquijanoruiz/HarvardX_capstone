@@ -37,7 +37,7 @@ if(!require(caret)) install.packages("caret", repos = "http://cran.us.r-project.
 # the assessment of this project. We wil use the Github url.
 org.url <- "https://www.ecuadorencifras.gob.ec/documentos/web-inec/Estadisticas_Sociales/ENSANUT/ENSANUT_2018/BDD_ENSANUT_2018_STATA_.zip"
 # We give the url a name
-url <- "https://github.com/aquijanoruiz/HarvardX_capstone/raw/master/SexRisk/BDD_ENSANUT_2018_STATA.zip"
+url <- "https://github.com/aquijanoruiz/HarvardX_capstone/raw/master/SexRisk/BDD_ENSANUT_2018_STATA_.zip"
 # We create a temporary directory
 td <- tempdir()
 # We create the placeholder file
@@ -247,7 +247,6 @@ summary(daughters$area)
 daughters$ethnicity <- daughters$f1_s2_9
 levels(daughters$ethnicity) <- c("indigenous","african ecuadorian", "black", "mulatto", 
                                  "montuvio", "mestizo", "white", "other")
-
 summary(daughters$ethnicity)
 
 # m.age and d.m.diff.age ------------------------------
@@ -315,6 +314,7 @@ summary(daughters$transfer)
 mothers$m.job <- mothers$f1_s3_1
 levels(mothers$m.job) <- c("yes", "no")
 summary(mothers$m.job)
+summary(mothers$f1_s3_1)
 
 # m.live.house ------------------------------
 # Whether the mother lives in the house
@@ -438,8 +438,9 @@ hist(mothers$m.age.first.intercourse)
 # m.contraception ------------------------------
 # Mother's use of contraception (is using, has ever used, has never used)
 mothers$m.contraception <- mothers$f2_s6_604
-levels(mothers$m.contraception) <- c("is using", "has ever used", "has never used")
+levels(mothers$m.contraception) <- c("is using", "has never used", "has ever used")
 summary(mothers$m.contraception)
+
 
 #####################################################################
 ####               3.1.4 The outcome variable                   #####
@@ -458,8 +459,8 @@ summary(daughters$intercourse)
 # contraception ------------------------------
 # Daughter's use of contraception (is using, has ever used, has never used)
 daughters$contraception <- daughters$f2_s6_604
-levels(daughters$contraception) <- c("is using", "has ever used", "has never used")
-summary(daughters$contraception)
+levels(daughters$contraception) <- c("is using", "has never used", "has ever used")
+daughters$contraception <- as.character(daughters$contraception)
 
 # Many women who have never used contraception have never had done so because they have never had 
 # intercourse. However, some of them have never used contraception despite having had intercourse.
@@ -480,10 +481,10 @@ table(daughters$intercourse,daughters$contraception,
 # because of economic reasons, no knowledge about contraception, religious reasons, others, doesn't know )
 daughters$contraception.no.use.reason <- daughters$f2_s6_613
 levels(daughters$contraception.no.use.reason) <- 
-  c("wants to get pregnant","postnatal","no sex life", "because of age", "doesn't like it", 
+  c("wants to get pregnant", "postnatal", "no sex life", "because of age", "doesn't like it", 
     "afraid of side effects", "had side effects", "partner doesn't like it", "feels embarrassed", 
-    "feels embarrassed", "because of economic reasons", "no knowledge about contraception", 
-    "religious reasons", "others" , "doesn't know")
+    "because of economic reasons", "no knowledge about contraception", "religious reasons", 
+    "others" , "doesn't know")
 summary(daughters$contraception.no.use.reason)
 
 # contraception.first ------------------------------
@@ -649,9 +650,6 @@ preg.risk <- preg.risk %>%
 preg.risk$risk[which(is.na(preg.risk$risk))] <- "no risk" # we change the NAs into "no risk"
 preg.risk$risk <- factor(preg.risk$risk, levels = c("risk", "no risk"))
 summary(preg.risk$risk)
-
-# I manually order the number of columns of the data frame
-saveRDS(preg.risk, file = "pregnancy_risk.rds")
 
 #####################################################################
 ####                      6 Analyzing the data                  #####
