@@ -74,7 +74,7 @@ data.key.people <- data.frame(variable = names(people),
 
 data.key.house <- data.frame(variable = names(house), 
                              label = attr(house,"var.labels"))
-view(data.key.house)
+
 data.key.women <- data.frame(variable = names(women), 
                              label = attr(women,"var.labels"))
 
