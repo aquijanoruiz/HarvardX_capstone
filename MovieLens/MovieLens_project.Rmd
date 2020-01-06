@@ -130,7 +130,7 @@ We can see that the most rated movies also have a relatively high rating. This i
 
 Some users are more active than others. Some are very picky, while some are easy to please. Let's see what the data can show us about the users. Below is the distribution of the users by the number of ratings. We can see some users have watched and rated many movies.
 
-```{r, fig.align = "center", fig.height = 2.5, fig.width = 5}
+```{r, fig.align = "center", fig.height = 2.5, fig.width = 5, comment=FALSE, warning=FALSE}
 edx %>% group_by(userId) %>% 
   summarize(n = n()) %>%
   ggplot(aes(n)) +
