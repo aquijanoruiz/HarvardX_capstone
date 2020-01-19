@@ -2,7 +2,10 @@
 title: "Can machine learning predict risky sexual behavior?"
 author: "Alonso Quijano"
 date: "1/2/2020"
-output: pdf_document
+output:
+  html_document:
+    df_print: paged
+  pdf_document: default
 ---
 
 # Introduction
@@ -123,10 +126,10 @@ library(caret)
 We will load the data from Github. Note that we have already transformed the data from "raw" data to "tidy" data. We can check the appendix of this report for more detail about the data wrangling process.
 
 ```{r}
-# We will load the data from Github and check the variables using the glimpse option.
+# We will load the data from Github and check the variables using the str function.
 githubURL <- "https://github.com/aquijanoruiz/HarvardX_capstone/raw/master/SexRisk/pregnancy_risk.rds"
 preg.risk <- readRDS(url(githubURL))
-glimpse(preg.risk)
+str(preg.risk)
 ```
 
 ### Demographic variables
@@ -151,7 +154,7 @@ chisq.test(preg.risk$age, preg.risk$risk) # the chi square test shows it's true
 
 We are not sure if the area has a significant correlation with the risk of pregnancy. There doesn't seem to be one.
 
-```{r, fig.align = "center", fig.height = 3.5, fig.width = 5, comment=FALSE, message= FALSE ,warning=FALSE}
+```{r, fig.align = "center", fig.height = 4, fig.width = 5, comment=FALSE, message= FALSE ,warning=FALSE}
 preg.risk %>% ggplot(aes(area, fill = risk)) + 
   geom_bar() + ggtitle("Relationship area/risk")
 
@@ -162,7 +165,7 @@ chisq.test(preg.risk$area, preg.risk$risk) # we can't reject the null
 
 It also doesn't seem to be a problem of ethnicity.
 
-```{r, fig.align = "center", fig.height = 5, fig.width = 10, comment=FALSE, message= FALSE ,warning=FALSE}
+```{r, fig.align = "center", fig.height = 4, fig.width = 10, comment=FALSE, message= FALSE ,warning=FALSE}
 ethnicity.plot1 <- preg.risk %>% ggplot(aes(ethnicity, fill = risk)) + 
   geom_bar() + ggtitle("Relationship ethnicity/risk") +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
@@ -180,7 +183,7 @@ chisq.test(preg.risk$ethnicity, preg.risk$risk) # we can't reject the null
 
 It looks like very small and very large age differences between the daughter and the mother affect the risk.
 
-```{r, fig.align = "center", fig.height = 3, fig.width = 5, comment=FALSE, message= FALSE ,warning=FALSE}
+```{r, fig.align = "center", fig.height = 4, fig.width = 7, comment=FALSE, message= FALSE ,warning=FALSE}
 preg.risk %>% ggplot(aes(d.m.age.diff, fill = risk)) + 
   geom_density() + ggtitle("Relationship d.m.age.diff/risk")
 ```
@@ -232,7 +235,6 @@ chisq.test(preg.risk$f.live.house, preg.risk$risk) # we reject the null
 It is evident that teenagers who do not attend school are more likely to be at risk of pregnancy. But a lot of our sample comes from people who were pregnant. So, maybe they left school after they got pregnant, and there may be reverse causality.
 
 ```{r, fig.align = "center", fig.height = 4, fig.width = 10, comment=FALSE, message= FALSE ,warning=FALSE}
-# attend.school ------------------------------
 attend.school.plot1 <- preg.risk %>% ggplot(aes(attend.school, fill = risk)) + 
   geom_bar() + ggtitle("Relationship attend.school/risk")
 
@@ -241,8 +243,6 @@ attend.school.plot2 <- preg.risk %>% ggplot(aes(attend.school, fill = risk)) +
 
 grid.arrange(attend.school.plot1, attend.school.plot2, ncol=2)
 chisq.test(preg.risk$attend.school, preg.risk$risk) # we reject the null
-
-# contraception.info ------------------------------
 ```
 
 * **contraception.info** 
@@ -433,7 +433,7 @@ chisq.test(preg.risk$smoke.recent, preg.risk$risk) # we reject the null
 
 This may be a striking fact for some of us. There is a correlation between early sexual initiation of the mothers and the risk of pregnancy of their daughters. Why is this?
 
-```{r, fig.align = "center", fig.height = 3, fig.width = 5, comment=FALSE, message= FALSE ,warning=FALSE}
+```{r, fig.align = "center", fig.height = 4, fig.width = 7, comment=FALSE, message= FALSE ,warning=FALSE}
 preg.risk %>% ggplot(aes(m.age.first.intercourse, fill = risk)) + 
   geom_density() + ggtitle("Relationship m.age.first.intercourse/risk")
 ```
