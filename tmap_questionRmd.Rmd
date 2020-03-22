@@ -1,0 +1,114 @@
+---
+title: "Tmap question"
+output: html_document
+---
+```{r setting directory, echo=FALSE, message=FALSE, warning=FALSE}
+library(knitr)
+opts_knit$set(root.dir = "~/Documents/elquantificador_projects/coronavirus_map")
+```
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+library(tidyverse)
+library(sf)
+library(rmapshaper)
+library(tmap)
+library(gganimate)
+library(leaflet)
+```
+
+### With NAs (misplaces names)
+```{r, echo=FALSE, warning=FALSE, message=FALSE, comment=FALSE}
+# --------- preparing the st data ---------
+# Ecuador's political division (*.shp) data
+ecu_map <- st_read("ECU_adm1.shp")
+
+# We simplify the data
+ecu_map <- ms_simplify(ecu_map, keep=0.01) # We keep the 0.4% of the polygon
+
+# We keep only the variables we need
+ecu_map <- ecu_map %>% select(-c(ID_0, ISO, NAME_0, ID_1, TYPE_1, ENGTYPE_1, NL_NAME_1, VARNAME_1)) %>%
+  rename(Provincia = NAME_1) # We only keep the province names and the geometry
+
+# --------- preparing the coronavirus data ---------
+confirmed <- read_csv("covid19_confirmed.csv")
+
+# We need to transform the data from wide to long
+confirmed <- confirmed %>% gather(Fecha, Casos, -Provincia) %>% 
+  mutate(Fecha = as.Date(Fecha, format = "%m/%d/%Y")) %>%
+  filter(Fecha >= as.Date("2020-03-05")) # We only have data by province from May 5th
+
+confirmed$Provincia <- factor(confirmed$Provincia, levels = levels(ecu_map$Provincia))
+
+# --------- merging the st data with the coronavirus data ---------
+covid19_confirmed_today <- confirmed %>% filter(Fecha == "2020-03-21") %>% select(-c(Fecha)) 
+
+covid19_confirmed_today <- inner_join(ecu_map, covid19_confirmed_today, by = "Provincia")
+```
+
+This is the data set I am using. It has come NAs.
+
+```{r, echo=TRUE, warning=FALSE, message=FALSE}
+covid19_confirmed_today
+```
+
+
+<style>
+.html-widget {
+    margin: auto;
+}
+</style>
+
+This is the map it produces. When rolling over the bubbles, they do not show the correct name of the province. Only for the first three provinces that do not have NAs.
+
+```{r, echo=TRUE, warning=FALSE, message=FALSE, fig.align = "center", fig.height = 8, fig.width = 7}
+covid19_confirmed_today_map <- covid19_confirmed_today %>%
+  tm_shape() + tm_polygons(col = "skyblue", alpha = 0.2) +
+  tm_bubbles(size = "Casos", col = "red", alpha = 0.6, border.lwd = NA)
+
+covid19_confirmed_today_map <- tmap_leaflet(covid19_confirmed_today_map)
+covid19_confirmed_today_map %>% removeLayersControl() %>%
+  setView(lng = -78.50374, lat = -1.289527, zoom = 7) %>% fitBounds(-80.8, -4.2, -76.5, 0.8)
+
+```
+
+### Turning NAs into zeros (shows small bubbles where there are no cases)
+
+If I decide to change the NAs into zeros. They bubbles show the correct names, but they add a small bubble even for the provinces that have zero cases. I tried using `size.lim = c(1,2e7)`. It deleats the bubbles with zero cases, but again has the same problem as the previous map.
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+confirmed <- read_csv("covid19_confirmed.csv")
+
+# We need to transform the data from wide to long
+confirmed <- confirmed %>% gather(Fecha, Casos, -Provincia) %>% 
+  mutate(Fecha = as.Date(Fecha, format = "%m/%d/%Y")) %>%
+  filter(Fecha >= as.Date("2020-03-05")) %>% # We only have data by province from May 5th
+  replace_na(list(Casos = 0))
+
+confirmed$Provincia <- factor(confirmed$Provincia, levels = levels(ecu_map$Provincia))
+
+# --------- merging the st data with the coronavirus data ---------
+covid19_confirmed_today <- confirmed %>% filter(Fecha == "2020-03-21") %>% select(-c(Fecha)) 
+covid19_confirmed_today <- inner_join(ecu_map, covid19_confirmed_today, by = "Provincia")
+```
+
+```{r, echo=TRUE, warning=FALSE, message=FALSE, fig.align = "center", fig.height = 8, fig.width = 7}
+covid19_confirmed_today
+```
+
+
+<style>
+.html-widget {
+    margin: auto;
+}
+</style>
+
+```{r, echo=TRUE, warning=FALSE, message=FALSE, fig.align = "center", fig.height = 8, fig.width = 7}
+covid19_confirmed_today_map <- covid19_confirmed_today %>% 
+  tm_shape() + tm_polygons(col = "skyblue", alpha = 0.2) +
+  tm_bubbles(size = "Casos", col = "red", alpha = 0.6, border.lwd = NA)
+
+covid19_confirmed_today_map <- tmap_leaflet(covid19_confirmed_today_map)
+
+covid19_confirmed_today_map %>% removeLayersControl() %>%
+  setView(lng = -78.50374, lat = -1.289527, zoom = 7) %>% fitBounds(-80.8, -4.2, -76.5, 0.8)
+```
