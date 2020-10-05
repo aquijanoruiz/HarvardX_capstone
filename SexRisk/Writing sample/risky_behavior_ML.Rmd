@@ -1,0 +1,21 @@
+---
+title: 'Predicting risky sexual behavior in adolescents using machine learning: a
+  cross-sectional study'
+author: "Alonso Quijano"
+date: "10/5/2020"
+output: pdf_document
+bibliography: references.bib
+---
+
+## Introduction
+
+Every year, an estimated 21 million girls aged 15 to 19 years become pregnant in low and middle-income countries. One-half of those pregnancies are unwanted, 55% of those ending in abortions, which are often unsafe [@sullyadding]. Pregnancy and childbirth complications have been found to be the leading cause of death among girls within this age group. A study found that adolescent pregnancy is associated with a high risk of low birth weight, preterm delivery and severe neonatal conditions, and early neonatal death [@ganchimeg2014pregnancy]. This is a major issue as the risks of early childbearing do not end with delivery. Women who have their first child before the age of 20 are more likely to receive less education, have fewer job opportunities and lower income, be divorced or separated from their partners, and remain in poverty [@mccauley1995meeting].
+
+Latin America and the Caribbean are the regions with the second largest adolescent pregnancy ratio in the world. In Ecuador, particularly, the adolescent birth rate is much higher than the regional average. While the rate in the region stands at 66.5 births per 1000 girls (15 to 19 years), in Ecuador it is estimated at 77.3 [@unicef2016accelerating]. In Ecuador, where abortion is illegal, maternal mortality is aggravated by the large number of unsafe abortions that occur each year (115 per 1000 live births), resulting in 44 deaths per 100,000 registered abortions [@ortiz2017abortion]. This phenomenon has drawn the attention of health authorities, which have promoted different pregnancy prevention programs since the past decade. According to data from the National Institute of Statistics and Census of Ecuador (INEC), there seems to be a steady drop in adolescent birth rate. Yet, it still remains at very concerning levels.
+
+Machine learning (ML) is becoming a widespread technique in predicting risky behaviors, such as substance abuse and suicide ideation/attempt. Supervised learning algorithms, for instance, have increasingly been used in addiction psychiatry for informing medical decisions [@mak2019applications]. As adolescent pregnancy rates remain a prevalent problem in many developing countries, new tools for detecting risky sexual behaviors could prove advantageous for health policy design and targeting. While the use of contraception like condoms can highly reduce the probability of contracting STDs and avoid unwanted pregnancies, its take-up remains very low among adolescents, at least in Ecuador. By detecting patterns in data and use those patterns to make predictions, ML could identify female adolescents who have unprotected sexual intercourse and help prevention programs work more effectively.
+
+## The data
+
+
+### References
